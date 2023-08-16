@@ -1,18 +1,26 @@
 <div class="mt-4">
 
-
   <div class="row">
-    <div class="col-md-3" *ngFor="let item of dataSource;let index = index">
+    <div class="col-md-3" *ngFor="let item of dataSource | paginate:
+    { id: 'tasks',
+    itemsPerPage: 3,
+    currentPage: page,
+    totalItems: total }; let index = index">
       <div class="card mt-3" >
         <div class="card-body">
+          <img [src]="'http://127.0.0.1:8000/' + item?.image" alt="">
           <h2 class="card-title">{{item.title}}</h2>
-          <p class="card-subtitle mb-2 text-muted">Dead-Line Date : {{item.deadLineDate}}</p>
-          <p class="card-text">{{item.description }}</p>
-          <a  class="card-link"  mat-raised-button color="basic">Details</a>
-          <button  mat-raised-button color="warn">Complete</button>
+          <p class="card-subtitle mb-2 text-muted">Dead-Line Date : {{item.deadline}}</p>
+          <p class="card-text">{{item.description}}</p>
+          <a  class="card-link"  mat-raised-button color="basic" (click)="detailsTask(item)">{{'tasks.details' | translate}}</a>
+          <button  mat-raised-button color="warn" (click)="complete(item)">{{'tasks.complete' | translate}}</button>
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <pagination-controls class="mt-4" (pageChange)="pageChange($event)" id="tasks"></pagination-controls>
   </div>
 
     <!-- <div class="listBox">
@@ -22,19 +30,19 @@
               <th mat-header-cell *matHeaderCellDef> No. </th>
               <td mat-cell *matCellDef="let element;let index = index"> {{index + 1}} </td>
             </ng-container>
-          
+
             <ng-container matColumnDef="title">
               <th mat-header-cell *matHeaderCellDef> Title </th>
               <td mat-cell *matCellDef="let element"> {{element.title}} </td>
             </ng-container>
-          
-            
+
+
             <ng-container matColumnDef="user">
               <th mat-header-cell *matHeaderCellDef> User </th>
               <td mat-cell *matCellDef="let element"> {{element.user}} </td>
             </ng-container>
-          
-           
+
+
             <ng-container matColumnDef="deadLineDate">
                 <th mat-header-cell *matHeaderCellDef> DeadLine Date </th>
                 <td mat-cell *matCellDef="let element"> {{element.deadLineDate}} </td>
@@ -46,15 +54,15 @@
 
             <ng-container matColumnDef="actions" >
                 <th mat-header-cell *matHeaderCellDef class="w-20">  </th>
-                <td mat-cell *matCellDef="let element">   
+                <td mat-cell *matCellDef="let element">
                     <button class="btn btn-warning" mat-raised-button>Update</button>
                     <button  mat-raised-button color="warn">Delete</button>
                 </td>
               </ng-container>
-          
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
-          
+
     </div> -->
 </div>

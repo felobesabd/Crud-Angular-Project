@@ -1,0 +1,14 @@
+{
+  "tasks": {
+    "allTasks": "كل المهمات",
+    "complete": "خلصااااان",
+    "inProgress": "شغااالين",
+    "details": "تفاصيل",
+    "all": "الكل"
+  },
+  "user": {},
+  "buttons": {},
+  "generic": {
+    "loading": "(متعنقفش)وسع خلقك ..."
+  }
+}

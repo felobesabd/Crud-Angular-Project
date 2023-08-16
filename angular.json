@@ -23,6 +23,11 @@
             "polyfills": "projects/user/src/polyfills.ts",
             "tsConfig": "projects/user/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "sweetalert2",
+              "@ngx-translate/core",
+              "@ngx-translate/http-loade"
+            ],
             "assets": [
               "projects/user/src/favicon.ico",
               "projects/user/src/assets"
@@ -30,7 +35,9 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "./node_modules/bootstrap/dist/css/bootstrap.css",
-              "projects/user/src/styles.scss"
+              "node_modules/ngx-spinner/animations/square-jelly-box.css",
+              "projects/user/src/styles.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "./node_modules/bootstrap/dist/js/bootstrap.min.js"
@@ -103,7 +110,9 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "./node_modules/bootstrap/dist/css/bootstrap.css",
-              "projects/user/src/styles.scss"
+              "node_modules/ngx-spinner/animations/square-jelly-box.css",
+              "projects/user/src/styles.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "./node_modules/bootstrap/dist/js/bootstrap.min.js"
@@ -133,6 +142,12 @@
             "polyfills": "projects/admin/src/polyfills.ts",
             "tsConfig": "projects/admin/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "sweetalert2",
+              "moment",
+              "@ngx-translate/core",
+              "@ngx-translate/http-loade"
+            ],
             "assets": [
               "projects/admin/src/favicon.ico",
               "projects/admin/src/assets"
@@ -140,7 +155,9 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "./node_modules/bootstrap/dist/css/bootstrap.css",
-              "projects/admin/src/styles.scss"
+              "node_modules/ngx-spinner/animations/square-jelly-box.css",
+              "projects/admin/src/styles.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "./node_modules/bootstrap/dist/js/bootstrap.min.js"
@@ -213,7 +230,9 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "./node_modules/bootstrap/dist/css/bootstrap.css",
-              "projects/admin/src/styles.scss"
+              "node_modules/ngx-spinner/animations/square-jelly-box.css",
+              "projects/admin/src/styles.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "./node_modules/bootstrap/dist/js/bootstrap.min.js"

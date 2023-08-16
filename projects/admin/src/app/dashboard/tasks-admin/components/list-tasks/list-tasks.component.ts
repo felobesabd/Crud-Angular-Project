@@ -2,72 +2,181 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTaskComponent } from '../add-task/add-task.component';
-export interface PeriodicElement {
-  title: string;
-  user: string;
-  deadLineDate: string;
-  status: string;
-}
+import { TasksService } from '../../services/tasks.service';
+import { User } from 'projects/admin/src/Models/Tasks';
+import * as moment from 'moment';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslateService } from '@ngx-translate/core';
+import { UsersService } from '../../../manage-users/services/users.service';
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {status:'Complete' , title: 'Hydrogen', user: "1.0079", deadLineDate:"10-11-2022" },
-  {status:'In-Prossing' , title: 'Helium', user: "4.0026", deadLineDate:"10-11-2022" },
-  {status:'Complete' , title: 'Lithium', user: "6.941", deadLineDate:"10-11-2022" },
-  {status:'Complete' , title: 'Beryllium', user: "9.0122", deadLineDate:"10-11-2022" },
-  {status:'Complete' , title: 'Boron', user: "10.811", deadLineDate:"10-11-2022" },
-  {status:'Complete' , title: 'Carbon', user: "12.010", deadLineDate:"10-11-2022" },
-  {status:'Complete' , title: 'Nitrogen', user: "14.006", deadLineDate:"10-11-2022" },
-  {status:'Complete' , title: 'Oxygen', user: "15.999", deadLineDate:"10-11-2022" },
-  {status:'Complete' , title: 'Fluorine', user: "18.998", deadLineDate:"10-11-2022" },
-  { status:'Complete' , title: 'Neon', user: "20.179", deadLineDate:"10-11-2022" },
-];
 @Component({
   selector: 'app-list-tasks',
   templateUrl: './list-tasks.component.html',
-  styleUrls: ['./list-tasks.component.scss']
+  styleUrls: ['./list-tasks.component.scss'],
 })
 export class ListTasksComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'title', 'user' ,'deadLineDate','status', 'actions'];
-  dataSource = ELEMENT_DATA;
-  tasksFilter!:FormGroup
-  users:any = [
-    {name:"Moahmed" , id:1},
-    {name:"Ali" , id:2},
-    {name:"Ahmed" , id:3},
-    {name:"Zain" , id:4},
-  ]
+  displayedColumns: string[] = [
+    'position',
+    'title',
+    'user',
+    'deadline',
+    'status',
+    'actions',
+  ];
 
-  status:any = [
-    {name:"Complete" , id:1},
-    {name:"In-Prossing" , id:2},
-  ]
-  constructor(public dialog: MatDialog ,private fb:FormBuilder) { }
+  users: any = [];
+
+  status: any = [
+    { name: this.translate.instant('tasks.complete'),},
+    { name:  this.translate.instant('tasks.inProgress'),},
+  ];
+
+  dataSource: any[] = [];
+  tasksFilter!: FormGroup;
+  timeOutId: any;
+  page: any = 1;
+  total: any = 1;
+  filteration: any = {
+    page: this.page,
+    limit: 5
+  };
+
+  constructor(
+    private service: UsersService,
+    public dialog: MatDialog,
+    private fb: FormBuilder,
+    private ser: TasksService,
+    private translate: TranslateService,
+  ) { this.getAllUserData() }
 
   ngOnInit(): void {
-    this.createform()
+    this.createform();
+    this.allTasks();
+    this.getAllUser()
   }
 
   createform() {
     this.tasksFilter = this.fb.group({
-      title:[''],
-      userId:[''],
-      fromDate:[''],
-      toDate:['']
+      title: [''],
+      userId: [''],
+      fromDate: [''],
+      toDate: [''],
+    });
+  }
+
+                              // **Search** //
+  //// **Search By Key Word** ////
+  search(event: any) {
+    this.filteration['page'] = 1;
+    this.filteration['keyword'] = event.value;
+    clearTimeout(this.timeOutId);
+    this.timeOutId = setTimeout(() => {
+      this.allTasks()
+    }, 3000);
+  }
+  //// **Search By User** ////
+  searchByUser(event: User) {
+    this.filteration['page'] = 1;
+    this.filteration['userId'] = event;
+    this.allTasks();
+  }
+  //// **Search By User** ////
+  searchByStatus(event: User) {
+    this.filteration['page'] = 1;
+    this.filteration['status'] = event;
+    this.allTasks();
+  }
+  //// **Search By Date** ////
+  searchByDate(event: any, type: any) {
+    this.filteration['page'] = 1;
+    this.filteration[type] = moment(event.value).format('DD-MM-YYYY')
+    if (type === "toDate" && this.filteration["toDate"] !== "Invalid date") {
+      this.allTasks();
+    }
+  }
+
+                            // **get All Tasks** //
+  allTasks() {
+    this.ser.getAllTasks(this.filteration).subscribe((res: any) => {
+      this.dataSource = this.mapAllTasks(res.tasks);
+      this.total = res.totalItems;
+      console.log(this.total);
+    });
+  }
+
+  mapAllTasks(data: any[]) {
+    let mapping = data.map((item) => {
+      return {
+        ...item,
+        user: item.userId.username,
+      };
+    });
+    return mapping;
+  }
+
+  addTask() {
+    const dialogRef = this.dialog.open(AddTaskComponent, {
+      width: '750px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.allTasks();
+      }
+    });
+  }
+
+                            // **delete Task** //
+  deleteItem(id: string) {
+    console.log(id);
+    this.ser.deleteTask(id).subscribe((res) => {
+      this.allTasks();
+    });
+  }
+
+//// **Update Tasks** ////
+  updateItem(element: any) {
+    console.log(element);
+    const dialogRef = this.dialog.open(AddTaskComponent, {
+      width: '750px',
+      data: element
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.allTasks();
+      }
+    });
+  }
+
+//// **Pagenation** ////
+  pageChange(event: any) {
+    this.page = event;
+    this.filteration['page'] = event;
+    this.allTasks()
+    console.log(event);
+  }
+
+//// send Data(model) => func(getAllUserDataBSub)
+getAllUser() {
+  this.service.getAllUserDataBSub()
+}
+
+//// subscribtion on => userData(Behavoir Subject)
+  getAllUserData() {
+    this.service.userData.subscribe((res: any)=> {
+      this.users = this.mapUsers(res.data)
     })
   }
 
-  getAllTasks() {
+  mapUsers(data: any[]) {
+    let mapping = data?.map(item => {
+      return {
+        name: item.username,
+        id: item._id
+      };
+    });
+    return mapping;
+  }
 
-  }
-  addTask() {
-      const dialogRef = this.dialog.open(AddTaskComponent, {
-        width: '750px',
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        if(result) {
-          this.getAllTasks()
-        }
-      })
-  }
 }

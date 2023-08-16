@@ -1,0 +1,13 @@
+{
+  "tasks": {
+    "allTasks": "All Tasks",
+    "complete": "Complete",
+    "inProgress": "In-Progress",
+    "all": "All"
+  },
+  "user": {},
+  "buttons": {},
+  "generic": {
+    "loading": "loading"
+  }
+}

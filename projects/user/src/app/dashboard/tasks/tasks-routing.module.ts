@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListTasksComponent } from './components/list-tasks/list-tasks.component';
-import { TaskDetailsComponent } from './components/task-details/task-details.component';
+import { ListTasksComponent } from './list-tasks/list-tasks.component';
+import { TaskDetailsComponent } from './task-details/task-details.component';
 
 const routes: Routes = [
   {
@@ -9,7 +9,7 @@ const routes: Routes = [
     component:ListTasksComponent
   },
   {
-    path:':id', 
+    path:':id',
     component:TaskDetailsComponent
   },
 ];
